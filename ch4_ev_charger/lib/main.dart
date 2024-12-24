@@ -85,7 +85,20 @@ class _MyAppState extends State<MyWidget> {
         ),
       ),
       home: Scaffold(
-        appBar: AppBar(title: const Text('Audi ABT R8 GTR')),
+        appBar: AppBar(
+          title: const Text(
+            'Audi ABT R8 GTR',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          elevation: 2, 
+          shadowColor: Colors.grey.withOpacity(0.6), 
+          leading: IconButton(
+            icon: const Icon(Icons.menu), 
+            onPressed: () {},
+          ),
+        ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
