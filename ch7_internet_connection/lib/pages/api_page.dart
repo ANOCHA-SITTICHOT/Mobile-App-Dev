@@ -1,19 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'dart:async';
 import 'package:http/http.dart' as http;
 
-Future<List<String>> fetchData() async {
+Future<String> fetchData() async {
   final response =
-      await http.get(Uri.parse('https://dummyjson.com/products'));
-
+      await http.get(Uri.parse('https://www.itpart.net/mobile/api/product1.php'));
   if (response.statusCode == 200) {
-    Map<String, dynamic> jsonBody = json.decode(response.body);
-    
-    List<dynamic> products = jsonBody['products'];
-    
-    List<String> productTitles = products.map((product) => product['title'].toString()).toList();
-
-    return productTitles;
+    return response.body;
   } else {
     throw Exception('Failed to load data...');
   }
@@ -27,12 +21,12 @@ class ApiPage extends StatefulWidget {
 }
 
 class _ApiPageState extends State<ApiPage> {
-  late Future<List<String>> futureProducts;
+  late Future<String> futureData;
 
   @override
   void initState() {
     super.initState();
-    futureProducts = fetchData();
+    futureData = fetchData();
   }
 
   @override
@@ -40,8 +34,8 @@ class _ApiPageState extends State<ApiPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Product Titles')),
       body: Center(
-        child: FutureBuilder<List<String>>(
-          future: futureProducts,
+        child: FutureBuilder<String>(
+          future: futureData,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
@@ -50,13 +44,8 @@ class _ApiPageState extends State<ApiPage> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Text('No data available');
             }
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(snapshot.data![index]),
-                );
-              },
+            return SingleChildScrollView(
+              child: Text(snapshot.data!),
             );
           },
         ),
